@@ -29,6 +29,10 @@ jobs:
       env:
         fail-fast: true
 
+    - name: Install mongodb-database-tools
+      run: |
+        apt install -y mongodb-database-tools
+
     - name: Validate composer.json and composer.lock
       run: composer validate
 
