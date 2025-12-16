@@ -41,7 +41,7 @@ final class MongoDbTest extends Unit
             $this->markTestSkipped('MongoDB is not installed');
         }
 
-        $cleanupDirty = in_array('cleanup-dirty', $this->getGroups());
+        $cleanupDirty = in_array('cleanup-dirty', $this->groups());
         $config = $this->mongoConfig + ['cleanup' => $cleanupDirty ? 'dirty' : true];
 
         $client = new \MongoDB\Client();
