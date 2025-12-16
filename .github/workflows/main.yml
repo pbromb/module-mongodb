@@ -31,6 +31,7 @@ jobs:
 
     - name: Install mongodb-database-tools
       run: |
+        sudo apt update
         sudo apt install -y mongodb-database-tools
 
     - name: Validate composer.json and composer.lock
