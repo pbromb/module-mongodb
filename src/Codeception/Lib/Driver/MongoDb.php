@@ -126,21 +126,28 @@ class MongoDb
 
     private function findMongoShellBinary(): string
     {
-        if ($this->commandExists('mongosh')) {
-            return 'mongosh';
-        }
         if ($this->commandExists('mongo')) {
             return 'mongo';
         }
-        
+
+        if ($this->commandExists('mongosh')) {
+            return 'mongosh';
+        }
+
         throw new ModuleException($this, 'Neither mongosh nor mongo found in PATH.');
     }
 
     private function commandExists(string $cmd): bool
     {
-        $which = sprintf('command -v %s 2>/dev/null', $cmd);
-        $out = shell_exec($which);
-        return is_string($out) && trim($out) !== '';
+        $null = PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null';
+
+        exec(
+            sprintf('%s --version > %s 2>&1', escapeshellcmd($cmd), $null),
+            $_,
+            $code
+        );
+
+        return $code === 0;
     }
 
     public function loadFromMongoDump(string $dumpFile): void
