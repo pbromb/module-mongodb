@@ -38,6 +38,10 @@ jobs:
         extensions: mbstring, xml, dom, mongodb
         tools: pecl
         coverage: none
+        # this ini directive seems to be off by default in PHP 8.5
+        # see https://github.com/php/php-src/issues/20279
+        # enable it because codeception relies on it.
+        ini-values: register_argc_argv=1
       env:
         fail-fast: true
 
