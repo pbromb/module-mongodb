@@ -44,6 +44,14 @@ final class MongoDbTest extends Unit
         $cleanupDirty = in_array('cleanup-dirty', $this->groups());
         $config = $this->mongoConfig + ['cleanup' => $cleanupDirty ? 'dirty' : true];
 
+        fwrite(
+            STDERR,
+            "\ncleanupDirty=" . ($cleanupDirty ? 'yes' : 'no')
+            . " cleanup=" . var_export($config['cleanup'], true)
+            . " groups=" . json_encode($this->groups())
+            . "\n"
+        );
+        
         $client = new \MongoDB\Client();
 
         $container = Stub::make(ModuleContainer::class);
