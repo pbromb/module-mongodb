@@ -51,7 +51,7 @@ final class MongoDbTest extends Unit
             . " groups=" . json_encode($this->groups())
             . "\n"
         );
-        
+
         $client = new \MongoDB\Client();
 
         $container = Stub::make(ModuleContainer::class);
