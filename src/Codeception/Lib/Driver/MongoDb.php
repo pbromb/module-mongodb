@@ -112,7 +112,7 @@ class MongoDb
     public function load(string $dumpFile): void
     {
         $cmd = sprintf(
-            'mongo %s %s%s',
+            'mongosh %s %s%s',
             $this->host . '/' . $this->dbName,
             $this->createUserPasswordCmdString(),
             escapeshellarg($dumpFile)
