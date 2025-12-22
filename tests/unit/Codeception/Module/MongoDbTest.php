@@ -41,33 +41,25 @@ final class MongoDbTest extends Unit
             $this->markTestSkipped('MongoDB is not installed');
         }
 
-        $cleanupDirty = ($this->getName() === 'testCleanupDirty');
-        $config = $this->mongoConfig + ['cleanup' => $cleanupDirty ? 'dirty' : true];
-
-        fwrite(
-            STDERR,
-            "\ncleanupDirty=" . ($cleanupDirty ? 'yes' : 'no')
-            . " cleanup=" . var_export($config['cleanup'], true)
-            . " groups=" . json_encode($this->groups())
-            . "\n"
-        );
-
         $client = new \MongoDB\Client();
 
-        $container = Stub::make(ModuleContainer::class);
-        $this->module = new MongoDb($container);
-        $this->module->_setConfig($config);
-        try {
-            $this->module->_initialize();
-        } catch (ModuleException $moduleException) {
-            $this->markTestSkipped($moduleException->getMessage());
-        }
+        $this->initMongoModule(true);
 
         $this->db = $client->selectDatabase('test');
         $this->userCollection = $this->db->users;
 
-        if (!$cleanupDirty) {
-            $this->userCollection->insertOne(['id' => 1, 'email' => 'miles@davis.com']);
+        $this->userCollection->insertOne(['id' => 1, 'email' => 'miles@davis.com']);
+    }
+
+    private function initMongoModule($cleanup): void
+    {
+        $container = Stub::make(ModuleContainer::class);
+        $this->module = new MongoDb($container);
+        $this->module->_setConfig($this->mongoConfig + ['cleanup' => $cleanup]);
+        try {
+            $this->module->_initialize();
+        } catch (ModuleException $moduleException) {
+            $this->markTestSkipped($moduleException->getMessage());
         }
     }
 
@@ -189,11 +181,10 @@ final class MongoDbTest extends Unit
         }
     }
 
-    /**
-     * @group cleanup-dirty
-     */
     public function testCleanupDirty()
     {
+        $this->initMongoModule('dirty');
+
         $test = $this->createMock(\Codeception\TestInterface::class);
         $collection = $this->db->selectCollection('96_bulls');
 
