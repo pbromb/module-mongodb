@@ -205,6 +205,10 @@ class MongoDb extends Module
         if ($this->shouldCleanup()) {
             $this->cleanup();
             $this->loadDump();
+
+            if ($this->config['cleanup'] === 'dirty') {
+                $this->dbHash = $this->driver->getDbHash();
+            }
         }
     }
 
